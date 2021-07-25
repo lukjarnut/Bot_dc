@@ -115,6 +115,7 @@ client.on('message', async message => {
 
 	const bye_gif = giphs.bye_gif;
 	const no_u_gif = giphs.no_u_gif;
+	const wikson_gif = giphs.wikson_gif;
 
 	let date_ob = new Date();
 	let hour = date_ob.getHours();
@@ -137,7 +138,7 @@ client.on('message', async message => {
 				member.voice.setChannel(null);
 
 				if(message.author.id == '619597863319633973'){ //Wikson
-					client.channels.cache.get('804802612171767828').send('https://media.giphy.com/media/HS6QSDFMQa4OA/giphy.gif').then(() =>
+					client.channels.cache.get('804802612171767828').send(wikson_gif[getRandom(wikson_gif.length)]).then(() =>
 					client.channels.cache.get('804802612171767828').send(`Pa Pa ${message.author.toString()}`));
 				}
 				else{
