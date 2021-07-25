@@ -137,11 +137,11 @@ client.on('message', async message => {
 				member.voice.setChannel(null);
 
 				if(message.author.id == '619597863319633973'){ //Wikson
-					message.channel.send('https://media.giphy.com/media/HS6QSDFMQa4OA/giphy.gif').then(() =>
+					client.channels.cache.get('804802612171767828').send('https://media.giphy.com/media/HS6QSDFMQa4OA/giphy.gif').then(() =>
 					client.channels.cache.get('804802612171767828').send(`Pa Pa ${message.author.toString()}`));
 				}
 				else{
-					message.channel.send(no_u_gif[getRandom(no_u_gif.length)]).then(() =>
+					client.channels.cache.get('804802612171767828').send(no_u_gif[getRandom(no_u_gif.length)]).then(() =>
 					client.channels.cache.get('804802612171767828').send(`Pa Pa ${message.author.toString()}`));
 				}
 			}
@@ -150,7 +150,7 @@ client.on('message', async message => {
 			if(member.id === '591261870950973450'){
 			member.voice.setChannel(null);
 
-			message.channel.send(bye_gif[getRandom(bye_gif.length)]);
+			client.channels.cache.get('804802612171767828').send(bye_gif[getRandom(bye_gif.length)]);
 			client.channels.cache.get('804802612171767828').send(`Pa Pa Drumek. od: ${message.author.toString()}`);
 			}
 		}
