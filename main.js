@@ -4,6 +4,10 @@ require('dotenv').config();
 
 const Discord = require('discord.js');
 const mysql = require('mysql2');
+
+const giphs = require('./giphs');
+
+
 const client = new Discord.Client();
 
 client.once('ready', () => {
@@ -49,23 +53,6 @@ async function check_config(person){
 		console.log(err);
 	}
 }
-
-let bye_gif = ['https://tenor.com/view/puffybear-puffy-face-cute-bye-gif-12628645',
-'https://gph.is/2RY0k2q',
-'https://tenor.com/view/im-out-goodbye-bye-bye-bye-im-done-sorry-gif-17148570',
-'https://gph.is/g/4bvYRbL',
-'https://media.giphy.com/media/TUJyGPCtQ7ZUk/giphy.gif',
-'https://media.giphy.com/media/i67uIY4a61ejm/giphy.gif',
-'https://media.giphy.com/media/3o7WICht89LQdQZa2A/giphy.gif'
-]
-
-let no_u_gif = ['https://media.giphy.com/media/cXblnKXr2BQOaYnTni/giphy.gif',
-'https://media.giphy.com/media/3o7TKEdVH8csXxKDO8/giphy.gif',
-'https://media.giphy.com/media/bQC7ZxmQ3LdLO/giphy.gif',
-'https://media.giphy.com/media/3o7TKr1ZOGWM32HvWg/giphy.gif',
-'https://media.giphy.com/media/WxF8QLNOeQE6I/giphy.gif',
-'https://i.imgur.com/Ng23RtJ.png'
-]
 
 
 client.on("voiceStateUpdate", async (oldVoiceState, newVoiceState) => { // Listeing to the voiceStateUpdate event
@@ -125,6 +112,9 @@ client.on("presenceUpdate", (oldMember, newMember) => {
 });
 
 client.on('message', async message => {
+
+	const bye_gif = giphs.bye_gif;
+	const no_u_gif = giphs.no_u_gif;
 
 	let date_ob = new Date();
 	let hour = date_ob.getHours();
