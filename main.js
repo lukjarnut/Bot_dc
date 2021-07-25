@@ -113,9 +113,6 @@ client.on("presenceUpdate", (oldMember, newMember) => {
 
 client.on('message', async message => {
 
-	const tagged_user = message.mentions.members.first().id;
-	const tagging_user = message.author.id;
-
 	const bye_gif = giphs.bye_gif;
 	const no_u_gif = giphs.no_u_gif;
 	const wikson_gif = giphs.wikson_gif;
@@ -133,9 +130,6 @@ client.on('message', async message => {
 	if (command === 'test') {
 
 		message.channel.send('Działam. Działam. Spokojnie...');
-		if (message.mentions.members.size){
-			console.log(message.mentions.members.first().id);
-		}
 	}
 	else if(command === 'drumek_out'){
 		message.delete();
@@ -165,6 +159,8 @@ client.on('message', async message => {
 		});
 	}
 	else if(command === 'pojedynek'){
+		const tagged_user = message.mentions.members.first().id;
+		const tagging_user = message.author.id;
 		if (message.mentions.members.size){
 			message.guild.members.cache.forEach(member => {
 			if (getRandom(100) <= 50){
