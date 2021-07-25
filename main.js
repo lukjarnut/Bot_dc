@@ -113,6 +113,9 @@ client.on("presenceUpdate", (oldMember, newMember) => {
 
 client.on('message', async message => {
 
+	const tagged_user = message.mentions.members.first().id;
+	const tagging_user = message.author.id;
+
 	const bye_gif = giphs.bye_gif;
 	const no_u_gif = giphs.no_u_gif;
 	const wikson_gif = giphs.wikson_gif;
@@ -128,7 +131,11 @@ client.on('message', async message => {
 	const command = args.shift().toLowerCase();
 
 	if (command === 'test') {
+
 		message.channel.send('Działam. Działam. Spokojnie...');
+		if (message.mentions.members.size){
+			console.log(message.mentions.members.first().id);
+		}
 	}
 	else if(command === 'drumek_out'){
 		message.delete();
@@ -156,6 +163,37 @@ client.on('message', async message => {
 			}
 		}
 		});
+	}
+	else if(command === 'pojedynek'){
+		if (message.mentions.members.size){
+			message.guild.members.cache.forEach(member => {
+			if (getRandom(100) <= 50){
+				if(member.id === tagging_user){
+					member.voice.setChannel(null);
+
+					/*if(message.author.id == '619597863319633973'){ //Wikson
+						client.channels.cache.get('804802612171767828').send(wikson_gif[getRandom(wikson_gif.length)]).then(() =>
+						client.channels.cache.get('804802612171767828').send(`Wikson przegrała z ${message.author.toString()}`));
+					}*/
+
+						client.channels.cache.get('804802612171767828').send(no_u_gif[getRandom(no_u_gif.length)]).then(() =>
+						client.channels.cache.get('804802612171767828').send("<@" + tagging_user + "> przegrał/-a pojedynek z <@" + tagged_user + ">"));
+
+				}
+			}
+			else{
+				if(member.id === tagged_user){
+				member.voice.setChannel(null);
+
+				client.channels.cache.get('804802612171767828').send(bye_gif[getRandom(bye_gif.length)]).then(() =>
+				client.channels.cache.get('804802612171767828').send("<@" + tagging_user + "> wygrał/-a pojedynek z <@" + tagged_user + ">"));
+				}
+			}
+			});
+		}
+		else{
+			client.channels.cache.get('804802612171767828').send('Nie ma takiej osoby na czacie głosowym');
+		}
 	}
     else if (command === 'ds'){
 		const state = await check_config("wikson");
