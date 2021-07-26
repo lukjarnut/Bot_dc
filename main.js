@@ -114,7 +114,7 @@ client.on("voiceStateUpdate", async (oldVoiceState, newVoiceState) => { // Liste
     console.log(`a guild member's presence changes`);
 });*/
 
-const pojedynek_job = schedule.scheduleJob('*/30 * * * * *', function () {
+const pojedynek_job = schedule.scheduleJob('*/10 * * * * *', function () {
 			 pojedynek_avaible = true;
 })
 
@@ -140,7 +140,7 @@ client.on('message', async message => {
 
 		message.channel.send('Działam. Działam. Spokojnie...');
 	}
-	else if(command === 'drumek_out'){
+	else if(command === 'drumek_out' && await check_config("drumek") == "true"){
 		message.delete();
 		message.guild.members.cache.forEach(member => {
 
@@ -267,7 +267,7 @@ client.on('message', async message => {
 					console.log(`${message.author.tag} czepia się bota`);
 	}
 
-    else if(message.author.id === '591261870950973450'  && await check_config("drumek") == "true"){ //Drumek
+    else if(message.author.id === '591261870950973450' && await check_config("drumek") == "true"){ //Drumek
 			if (getRandom(100) <= 16){
 	        	message.react('😡').catch(console.error);
 			}
