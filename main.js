@@ -4,8 +4,11 @@ require('dotenv').config();
 
 const Discord = require('discord.js');
 const mysql = require('mysql2');
+const schedule = require('node-schedule');
 
 const giphs = require('./giphs');
+
+let pojedynek_avaible = true;
 
 
 const client = new Discord.Client();
@@ -107,15 +110,21 @@ client.on("voiceStateUpdate", async (oldVoiceState, newVoiceState) => { // Liste
 	    }
 });
 
-client.on("presenceUpdate", (oldMember, newMember) => {
+/*client.on("presenceUpdate", (oldMember, newMember) => {
     console.log(`a guild member's presence changes`);
-});
+});*/
+
+const pojedynek_job = schedule.scheduleJob('*/30 * * * * *', function () {
+			 pojedynek_avaible = true;
+})
 
 client.on('message', async message => {
 
 	const bye_gif = giphs.bye_gif;
 	const no_u_gif = giphs.no_u_gif;
 	const wikson_gif = giphs.wikson_gif;
+
+	let pojedynek_time = 10*000;
 
 	let date_ob = new Date();
 	let hour = date_ob.getHours();
@@ -134,68 +143,59 @@ client.on('message', async message => {
 	else if(command === 'drumek_out'){
 		message.delete();
 		message.guild.members.cache.forEach(member => {
-		if (getRandom(100) <= 50){
-			if(member.id === message.author.id){
-				member.voice.setChannel(null);
 
-				if(message.author.id == '619597863319633973'){ //Wikson
-					client.channels.cache.get('804802612171767828').send(wikson_gif[getRandom(wikson_gif.length)]).then(() =>
-					client.channels.cache.get('804802612171767828').send(`Pa Pa ${message.author.toString()}`));
-				}
-				else{
-					client.channels.cache.get('804802612171767828').send(no_u_gif[getRandom(no_u_gif.length)]).then(() =>
-					client.channels.cache.get('804802612171767828').send(`Pa Pa ${message.author.toString()}`));
-				}
-			}
-		}
-		else{
 			if(member.id === '591261870950973450'){
 			member.voice.setChannel(null);
 
 			client.channels.cache.get('804802612171767828').send(bye_gif[getRandom(bye_gif.length)]);
 			client.channels.cache.get('804802612171767828').send(`Pa Pa Drumek. od: ${message.author.toString()}`);
 			}
-		}
 		});
 	}
 	else if(command === 'pojedynek'){
-		const tagged_user = message.mentions.members.first().id;
-		const tagging_user = message.author.id;
-		console.log(tagged_user);
-		console.log(tagging_user);
-		if (message.mentions.members.size){
-			if (getRandom(100) < 50){
-			message.guild.members.cache.forEach(member => {
-				if(member.id === tagging_user){
-					member.voice.setChannel(null);
 
-					if(message.author.id == '619597863319633973'){ //Wikson
-						client.channels.cache.get('804802612171767828').send(wikson_gif[getRandom(wikson_gif.length)]).then(() =>
-						client.channels.cache.get('804802612171767828').send(`Wikson przegrała z ${message.author.toString()}`));
-					}
-						//console.log("tagging user");
-						client.channels.cache.get('804802612171767828').send(no_u_gif[getRandom(no_u_gif.length)]).then(() =>
-						client.channels.cache.get('804802612171767828').send("<@" + tagging_user + "> przegrał/-a pojedynek z <@" + tagged_user + ">"));
+		if(pojedynek_avaible){
+			pojedynek_avaible = false
+			const tagged_user = message.mentions.members.first().id;
+			const tagging_user = message.author.id;
+
+			if (message.mentions.members.size){
+				if (getRandom(100) < 50){
+				message.guild.members.cache.forEach(member => {
+					if(member.id === tagging_user){
+						member.voice.setChannel(null);
+
+						/*if(message.author.id == '619597863319633973'){ //Wikson
+							client.channels.cache.get('804802612171767828').send(wikson_gif[getRandom(wikson_gif.length)]).then(() =>
+							client.channels.cache.get('804802612171767828').send(`Wikson przegrała z ${message.author.toString()}`));
+						}*/
+							//console.log("tagging user");
+							client.channels.cache.get('804802612171767828').send(no_u_gif[getRandom(no_u_gif.length)]).then(() =>
+							client.channels.cache.get('804802612171767828').send("<@" + tagging_user + "> przegrał/-a pojedynek z <@" + tagged_user + ">"));
+							}
+						});
+				}
+				else{
+					message.guild.members.cache.forEach(member => {
+					if(member.id === tagged_user){
+						member.voice.setChannel(null);
+
+						//console.log("tagged user");
+						client.channels.cache.get('804802612171767828').send(bye_gif[getRandom(bye_gif.length)]).then(() =>
+						client.channels.cache.get('804802612171767828').send("<@" + tagging_user + "> wygrał/-a pojedynek z <@" + tagged_user + ">"));
 						}
 					});
+				}
 			}
 			else{
-				message.guild.members.cache.forEach(member => {
-				if(member.id === tagged_user){
-					member.voice.setChannel(null);
-
-					//console.log("tagged user");
-					client.channels.cache.get('804802612171767828').send(bye_gif[getRandom(bye_gif.length)]).then(() =>
-					client.channels.cache.get('804802612171767828').send("<@" + tagging_user + "> wygrał/-a pojedynek z <@" + tagged_user + ">"));
-					}
-				});
+				client.channels.cache.get('804802612171767828').send('Nie ma takiej osoby na czacie głosowym');
 			}
-
-		}
-		else{
-			client.channels.cache.get('804802612171767828').send('Nie ma takiej osoby na czacie głosowym');
-		}
 	}
+	else{
+			message.channel.send('Kurwa poczekać. Nie tak często.');
+	}
+
+}
     else if (command === 'ds'){
 		const state = await check_config("wikson");
         if (state === 'false'){
