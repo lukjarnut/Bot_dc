@@ -161,31 +161,36 @@ client.on('message', async message => {
 	else if(command === 'pojedynek'){
 		const tagged_user = message.mentions.members.first().id;
 		const tagging_user = message.author.id;
+		console.log(tagged_user);
+		console.log(tagging_user);
 		if (message.mentions.members.size){
+			if (getRandom(100) < 50){
 			message.guild.members.cache.forEach(member => {
-			if (getRandom(100) <= 50){
 				if(member.id === tagging_user){
 					member.voice.setChannel(null);
 
-					/*if(message.author.id == '619597863319633973'){ //Wikson
+					if(message.author.id == '619597863319633973'){ //Wikson
 						client.channels.cache.get('804802612171767828').send(wikson_gif[getRandom(wikson_gif.length)]).then(() =>
 						client.channels.cache.get('804802612171767828').send(`Wikson przegrała z ${message.author.toString()}`));
-					}*/
-
+					}
+						//console.log("tagging user");
 						client.channels.cache.get('804802612171767828').send(no_u_gif[getRandom(no_u_gif.length)]).then(() =>
 						client.channels.cache.get('804802612171767828').send("<@" + tagging_user + "> przegrał/-a pojedynek z <@" + tagged_user + ">"));
-
-				}
+						}
+					});
 			}
 			else{
+				message.guild.members.cache.forEach(member => {
 				if(member.id === tagged_user){
-				member.voice.setChannel(null);
+					member.voice.setChannel(null);
 
-				client.channels.cache.get('804802612171767828').send(bye_gif[getRandom(bye_gif.length)]).then(() =>
-				client.channels.cache.get('804802612171767828').send("<@" + tagging_user + "> wygrał/-a pojedynek z <@" + tagged_user + ">"));
-				}
+					//console.log("tagged user");
+					client.channels.cache.get('804802612171767828').send(bye_gif[getRandom(bye_gif.length)]).then(() =>
+					client.channels.cache.get('804802612171767828').send("<@" + tagging_user + "> wygrał/-a pojedynek z <@" + tagged_user + ">"));
+					}
+				});
 			}
-			});
+
 		}
 		else{
 			client.channels.cache.get('804802612171767828').send('Nie ma takiej osoby na czacie głosowym');
