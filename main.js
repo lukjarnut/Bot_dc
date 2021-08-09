@@ -119,6 +119,7 @@ const pojedynek_job = schedule.scheduleJob('*/10 * * * * *', function () {
 })
 
 client.on('message', async message => {
+	const author = message.author.id;
 
 	const bye_gif = giphs.bye_gif;
 	const no_u_gif = giphs.no_u_gif;
@@ -197,25 +198,27 @@ client.on('message', async message => {
 
 }
     else if (command === 'ds'){
-		const state = await check_config("wikson");
-        if (state === 'false'){
-            message.channel.send('Sie robi szefie. Można zaczepiać').then(msg => {message.delete({timeout:"500"})});
-			try{
-				await promisePool.execute('UPDATE states SET state = "true" WHERE name = "denerwowanie_wikson";');
+			if(author === '364442363277475841'){
+				const state = await check_config("wikson");
+		        if (state === 'false'){
+		            message.channel.send('Sie robi szefie. Można zaczepiać').then(msg => {message.delete({timeout:"500"})});
+					try{
+						await promisePool.execute('UPDATE states SET state = "true" WHERE name = "denerwowanie_wikson";');
+					}
+					catch(err){
+						console.log(err);
+					}
+		        }
+		        else{
+		            message.channel.send('Sie robi szefie. Będzie spokój').then(msg => {message.delete({timeout:"500"})});
+					try{
+						await promisePool.execute('UPDATE states SET state = "false" WHERE name = "denerwowanie_wikson";');
+					}
+					catch(err){
+						console.log(err);
+					}
+				}
 			}
-			catch(err){
-				console.log(err);
-			}
-        }
-        else{
-            message.channel.send('Sie robi szefie. Będzie spokój').then(msg => {message.delete({timeout:"500"})});
-			try{
-				await promisePool.execute('UPDATE states SET state = "false" WHERE name = "denerwowanie_wikson";');
-			}
-			catch(err){
-				console.log(err);
-			}
-		}
     }
 
 	else if (command === 'pp'){
