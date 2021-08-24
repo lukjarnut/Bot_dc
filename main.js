@@ -153,7 +153,7 @@ client.on('message', async message => {
 			}
 		});
 	}
-	else if(command === 'pojedynek'){
+	else if(command === 'pojedynek' || command === 'fight'){
 
 		if(pojedynek_avaible){
 			pojedynek_avaible = false
@@ -165,14 +165,8 @@ client.on('message', async message => {
 				message.guild.members.cache.forEach(member => {
 					if(member.id === tagging_user){
 						member.voice.setChannel(null);
-
-						/*if(message.author.id == '619597863319633973'){ //Wikson
-							client.channels.cache.get('804802612171767828').send(wikson_gif[getRandom(wikson_gif.length)]).then(() =>
-							client.channels.cache.get('804802612171767828').send(`Wikson przegrała z ${message.author.toString()}`));
-						}*/
-							//console.log("tagging user");
-							client.channels.cache.get('804802612171767828').send(no_u_gif[getRandom(no_u_gif.length)]).then(() =>
-							client.channels.cache.get('804802612171767828').send("<@" + tagging_user + "> przegrał/-a pojedynek z <@" + tagged_user + ">"));
+							message.channel.send(no_u_gif[getRandom(no_u_gif.length)]).then(() =>
+							message.channel.send("<@" + tagging_user + "> przegrał/-a pojedynek z <@" + tagged_user + ">"));
 							}
 						});
 				}
@@ -181,15 +175,14 @@ client.on('message', async message => {
 					if(member.id === tagged_user){
 						member.voice.setChannel(null);
 
-						//console.log("tagged user");
-						client.channels.cache.get('804802612171767828').send(bye_gif[getRandom(bye_gif.length)]).then(() =>
-						client.channels.cache.get('804802612171767828').send("<@" + tagging_user + "> wygrał/-a pojedynek z <@" + tagged_user + ">"));
+						message.channel.send(bye_gif[getRandom(bye_gif.length)]).then(() =>
+						message.channel.send("<@" + tagging_user + "> wygrał/-a pojedynek z <@" + tagged_user + ">"));
 						}
 					});
 				}
 			}
 			else{
-				client.channels.cache.get('804802612171767828').send('Nie ma takiej osoby na czacie głosowym');
+				message.channel.send('Nie ma takiej osoby na czacie głosowym');
 			}
 	}
 	else{
