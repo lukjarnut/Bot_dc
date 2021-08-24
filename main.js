@@ -70,7 +70,7 @@ client.on("voiceStateUpdate", async (oldVoiceState, newVoiceState) => { // Liste
 		}
 	    if (newVoiceState.channelID === '848546786032615436') {
 	        setTimeout(() => {
-							if(still_ping_pong(newVoiceState)){
+		if(still_ping_pong(newVoiceState)){
 	            newVoiceState.member.voice.setChannel('848546824498315274')
 	            .catch(console.error);
 	        }}, timeout);
@@ -78,41 +78,36 @@ client.on("voiceStateUpdate", async (oldVoiceState, newVoiceState) => { // Liste
 	    }
 	    else if (newVoiceState.channelID === '848546824498315274') {
 	        setTimeout(() => {
-							if(still_ping_pong(newVoiceState)){
+		if(still_ping_pong(newVoiceState)){
 	            newVoiceState.member.voice.setChannel('849004787188891659')
 	            .catch(console.error);
 	        }}, timeout);
 	    }
 	    else if (newVoiceState.channelID === '849004787188891659') {
 	        setTimeout(() => {
-							if(still_ping_pong(newVoiceState)){
+		if(still_ping_pong(newVoiceState)){
 	            newVoiceState.member.voice.setChannel('848546799186214962')
 	            .catch(console.error);
 	        }}, timeout);
 	    }
 	    else if (newVoiceState.channelID === '848546799186214962') {
 	        setTimeout(() => {
-							if(still_ping_pong(newVoiceState)){
+		if(still_ping_pong(newVoiceState)){
 	            newVoiceState.member.voice.setChannel('848546786032615436')
 	            .catch(console.error);
 	        }}, timeout);
 	    }
 		}
-
 		//bryg
 		else if (newVoiceState.channelID === '804802571172708423') {
 	        setTimeout(() => {
-						if (newVoiceState.channelID === '804802571172708423'){
+		if (newVoiceState.channelID === '804802571172708423'){
 	            newVoiceState.member.voice.setChannel('848546786032615436')
 	            .catch(console.error);
 						}
 	        }, timeout_afk);
 	    }
 });
-
-/*client.on("presenceUpdate", (oldMember, newMember) => {
-    console.log(`a guild member's presence changes`);
-});*/
 
 const pojedynek_job = schedule.scheduleJob('*/10 * * * * *', function () {
 			 pojedynek_avaible = true;
@@ -165,16 +160,15 @@ client.on('message', async message => {
 				message.guild.members.cache.forEach(member => {
 					if(member.id === tagging_user){
 						member.voice.setChannel(null);
-							message.channel.send(no_u_gif[getRandom(no_u_gif.length)]).then(() =>
-							message.channel.send("<@" + tagging_user + "> przegrał/-a pojedynek z <@" + tagged_user + ">"));
-							}
-						});
+						message.channel.send(no_u_gif[getRandom(no_u_gif.length)]).then(() =>
+						message.channel.send("<@" + tagging_user + "> przegrał/-a pojedynek z <@" + tagged_user + ">"));
+						}
+					});
 				}
 				else{
 					message.guild.members.cache.forEach(member => {
 					if(member.id === tagged_user){
 						member.voice.setChannel(null);
-
 						message.channel.send(bye_gif[getRandom(bye_gif.length)]).then(() =>
 						message.channel.send("<@" + tagging_user + "> wygrał/-a pojedynek z <@" + tagged_user + ">"));
 						}
@@ -190,71 +184,69 @@ client.on('message', async message => {
 	}
 
 }
-    else if (command === 'ds'){
-			if(author === '364442363277475841'){
-				const state = await check_config("wikson");
-		        if (state === 'false'){
-		            message.channel.send('Sie robi szefie. Można zaczepiać').then(msg => {message.delete({timeout:"500"})});
-					try{
-						await promisePool.execute('UPDATE states SET state = "true" WHERE name = "denerwowanie_wikson";');
-					}
-					catch(err){
-						console.log(err);
-					}
-		        }
-		        else{
-		            message.channel.send('Sie robi szefie. Będzie spokój').then(msg => {message.delete({timeout:"500"})});
-					try{
-						await promisePool.execute('UPDATE states SET state = "false" WHERE name = "denerwowanie_wikson";');
-					}
-					catch(err){
-						console.log(err);
-					}
-				}
-			}
+    else if (command === 'ds' && author === '364442363277475841'){
+	const state = await check_config("wikson");
+        if (state === 'false'){
+            message.channel.send('Sie robi szefie. Można zaczepiać').then(msg => {message.delete({timeout:"500"})});
+		try{
+			await promisePool.execute('UPDATE states SET state = "true" WHERE name = "denerwowanie_wikson";');
+		}
+		catch(err){
+			console.log(err);
+		}
+	 }
+	 else{
+	    message.channel.send('Sie robi szefie. Będzie spokój').then(msg => {message.delete({timeout:"500"})});
+		try{
+			await promisePool.execute('UPDATE states SET state = "false" WHERE name = "denerwowanie_wikson";');
+		}
+		catch(err){
+			console.log(err);
+		}
+	}
     }
 
-	else if (command === 'pp'){
+	else if (command === 'pp' && author === '364442363277475841'){
 		const state = await check_config("ping_pong");
         if (state === 'false'){
             message.channel.send('Ping pong włączony').then(msg => {message.delete({timeout:"500"})});
-			try{
-				await promisePool.execute('UPDATE states SET state = "true" WHERE name = "ping_pong";');
-			}
-			catch(err){
-				console.log(err);
-			}
+		try{
+			await promisePool.execute('UPDATE states SET state = "true" WHERE name = "ping_pong";');
+		}
+		catch(err){
+			console.log(err);
+		}
         }
         else{
             message.channel.send('Ping pong wyłączony').then(msg => {message.delete({timeout:"500"})});
-			try{
-				await promisePool.execute('UPDATE states SET state = "false" WHERE name = "ping_pong";');
-			}
-			catch(err){
-				console.log(err);
-			}
+		try{
+			await promisePool.execute('UPDATE states SET state = "false" WHERE name = "ping_pong";');
 		}
+		catch(err){
+			console.log(err);
+		}
+	}
     }
 
     else if(command == 'aco' || message.author.id === '619597863319633973'){ //Wikson
-			if (await check_config("wikson") == "true"){
-				if (getRandom(100) <= 14){
-				message.react('🇦')
-				.then(() => message.react('🇱'))
-				.then(() => message.react('🇪'))
-				.then(() => message.react('🟦'))
-				.then(() => message.react('🇨'))
-				.then(() => message.react('🇴'))
-				.then(() => message.react('❓'))
-				.catch(console.error);
-						console.log(`${message.author.tag} mowi, ale co`);
+	if (await check_config("wikson") == "true"){
+		if (getRandom(100) <= 14){
+			message.react('🇦')
+			.then(() => message.react('🇱'))
+			.then(() => message.react('🇪'))
+			.then(() => message.react('🟦'))
+			.then(() => message.react('🇨'))
+			.then(() => message.react('🇴'))
+			.then(() => message.react('❓'))
+			.catch(console.error);
+					console.log(`${message.author.tag} mowi, ale co`);
 				}
 			}
     }
 
 	else if((message.content.toLowerCase().includes("wyłącz") || message.content.toLowerCase().includes("wylacz")
-					|| message.content.toLowerCase().includes("wyłacz") || message.content.toLowerCase().includes("wylącz"))
-					&& message.content.toLowerCase().includes("bota")){
+		|| message.content.toLowerCase().includes("wyłacz") || message.content.toLowerCase().includes("wylącz"))
+		&& message.content.toLowerCase().includes("bota")){
 		message.react('🇳')
 			.then(() => message.react('🇮'))
 			.then(() => message.react('🇪'))
