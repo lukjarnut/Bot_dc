@@ -131,6 +131,8 @@ client.on('message', async message => {
 
 	const args = message.content.slice(process.env.PREFIX.length).trim().split(/ +/);
 	const command = args.shift().toLowerCase();
+	
+	if(!message.content.startsWith(process.env.PREFIX)) return;
 
 	if (command === 'test') {
 
