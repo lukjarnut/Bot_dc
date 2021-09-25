@@ -145,8 +145,8 @@ client.on('message', async message => {
 			if(member.id === '591261870950973450'){
 			member.voice.setChannel(null);
 
-			client.channels.cache.get('804802612171767828').send(bye_gif[getRandom(bye_gif.length)]);
-			client.channels.cache.get('804802612171767828').send(`Pa Pa Drumek. od: ${message.author.toString()}`);
+			message.channel.send(bye_gif[getRandom(bye_gif.length)]);
+			message.channel.send(`Pa Pa Drumek. od: ${message.author.toString()}`);
 			}
 		});
 	}
