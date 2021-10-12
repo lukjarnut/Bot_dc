@@ -7,16 +7,16 @@ const mysql = require('mysql2');
 const schedule = require('node-schedule');
 
 const giphs = require('./giphs');
+const get_date = require('./mods/date');
+const check_config = require('./mods/check_config');
 
 let pojedynek_avaible = true;
-
 
 const client = new Discord.Client();
 
 client.once('ready', () => {
 	console.log('Bot ready to work!');
 });
-
 
 const pool = mysql.createPool({
 	host: process.env.MYSQL_HOST,
@@ -44,70 +44,13 @@ function getRandom(max) {
 	return Math.floor(Math.random() * max);
   }
 
-function get_date(){
-	let date_ob = new Date();
-
-	// current date
-	// adjust 0 before single digit date
-	let date = ("0" + date_ob.getDate()).slice(-2);
-
-	// current month
-	let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
-
-	// current year
-	let year = date_ob.getFullYear();
-
-	let hours = date_ob.getHours();
-	// current hours
-	if (hours > 10){
-		hours = date_ob.getHours();
-	}
-	else{
-		hours = "0" + date_ob.getHours();
-	}
-
-	// current minutes
-	let minutes = date_ob.getMinutes();
-	if (minutes > 10){
-		minutes = date_ob.getMinutes();
-	}
-	else{
-		minutes = "0" + date_ob.getMinutes();
-	}
-
-	// current seconds
-	let seconds = date_ob.getSeconds();
-	if (seconds > 10){
-		seconds = date_ob.getSeconds();
-	}
-	else{
-		seconds = "0" + date_ob.getSeconds();
-	}
-
-	return(year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds);
-
-}
-
-async function check_config(person){
-	try{
-	const [rows, fields] = await promisePool.execute("SELECT state FROM states");
-	if (person === "wikson") return(rows[0].state);
-	else if (person === "drumek") return(rows[1].state);
-	else if (person === "ping_pong") return(rows[2].state);
-	else if (person === "carl_bot") return(rows[3].state);
-	}
-	catch(err){
-		console.log(err);
-	}
-}
-
 
 client.on("voiceStateUpdate", async (oldVoiceState, newVoiceState) => { // Listeing to the voiceStateUpdate event
     let timeout = 1200;
 		let timeout_afk = 5*60000;
 
 		//ping pong
-		const state = await check_config("ping_pong");
+		const state = await check_config("ping_pong", promisePool);
 		if(state == 'true'){
 		if(newVoiceState.member.id === '364442363277475841' && still_ping_pong(newVoiceState)){
 			newVoiceState.member.voice.setChannel(oldVoiceState.channelID);
@@ -196,7 +139,7 @@ client.on('message', async message => {
 			.setFooter(get_date());
 		message.channel.send(embed_test);
 	}
-	else if(command === 'drumek_out' && await check_config("drumek") == "true"){
+	else if(command === 'drumek_out' && await check_config("drumek", promisePool) == "true"){
 		message.delete();
 		message.guild.members.cache.forEach(member => {
 
@@ -245,7 +188,7 @@ client.on('message', async message => {
 
 }
     else if (command === 'ds' && author === '364442363277475841'){
-	const state = await check_config("wikson");
+	const state = await check_config("wikson", promisePool);
         if (state === 'false'){
             message.channel.send('Sie robi szefie. Można zaczepiać').then(msg => {message.delete({timeout:"500"})});
 		try{
@@ -267,7 +210,7 @@ client.on('message', async message => {
     }
 
 	else if (command === 'pp' && author === '364442363277475841'){
-		const state = await check_config("ping_pong");
+		const state = await check_config("ping_pong", promisePool);
         if (state === 'false'){
             message.channel.send('Ping pong włączony').then(msg => {message.delete({timeout:"500"})});
 		try{
@@ -289,7 +232,7 @@ client.on('message', async message => {
     }
 
     else if(command == 'aco' || message.author.id === '619597863319633973'){ //Wikson
-	if (await check_config("wikson") == "true"){
+	if (await check_config("wikson", promisePool) == "true"){
 		if (getRandom(100) <= 14){
 			message.react('🇦')
 			.then(() => message.react('🇱'))
@@ -315,13 +258,13 @@ client.on('message', async message => {
 					console.log(`${message.author.tag} czepia się bota`);
 	}
 
-    else if(message.author.id === '591261870950973450' && await check_config("drumek") == "true"){ //Drumek
+    else if(message.author.id === '591261870950973450' && await check_config("drumek", promisePool) == "true"){ //Drumek
 			if (getRandom(100) <= 16){
 	        	message.react('😡').catch(console.error);
 			}
     }
 
-	else if (message.author.id === '235148962103951360' && await check_config("carl_bot") == "true"){
+	else if (message.author.id === '235148962103951360' && await check_config("carl_bot", promisePool) == "true"){
 		if (message.content === 'ale co' || message.content === 'Ale co'){
 			message.delete();
 		}
