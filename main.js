@@ -44,6 +44,50 @@ function getRandom(max) {
 	return Math.floor(Math.random() * max);
   }
 
+function get_date(){
+	let date_ob = new Date();
+
+	// current date
+	// adjust 0 before single digit date
+	let date = ("0" + date_ob.getDate()).slice(-2);
+
+	// current month
+	let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+
+	// current year
+	let year = date_ob.getFullYear();
+
+	let hours = date_ob.getHours();
+	// current hours
+	if (hours > 10){
+		hours = date_ob.getHours();
+	}
+	else{
+		hours = "0" + date_ob.getHours();
+	}
+
+	// current minutes
+	let minutes = date_ob.getMinutes();
+	if (minutes > 10){
+		minutes = date_ob.getMinutes();
+	}
+	else{
+		minutes = "0" + date_ob.getMinutes();
+	}
+
+	// current seconds
+	let seconds = date_ob.getSeconds();
+	if (seconds > 10){
+		seconds = date_ob.getSeconds();
+	}
+	else{
+		seconds = "0" + date_ob.getSeconds();
+	}
+
+	return(year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds);
+
+}
+
 async function check_config(person){
 	try{
 	const [rows, fields] = await promisePool.execute("SELECT state FROM states");
@@ -137,6 +181,20 @@ client.on('message', async message => {
 	if (command === 'test') {
 
 		message.channel.send('Działam. Działam. Spokojnie...');
+	}
+	if (command === 'test_embed') {
+		let date_ob = new Date();
+		const embed_test = new Discord.MessageEmbed() 
+			.setColor('#0000ff')
+			.setTitle('Ziobro ty kurwo jebana')
+			.setDescription('Stanowski to też menda')
+			.addFields(
+				{ name: 'nazwa pola', value: 'zawartosc pola'},
+				{ name: 'pole pole', value: 'łyse pole', inline: true}
+				)
+			//.setImage('http://i.imgur.com/8MTwUpy.jpeg')
+			.setFooter(get_date());
+		message.channel.send(embed_test);
 	}
 	else if(command === 'drumek_out' && await check_config("drumek") == "true"){
 		message.delete();
