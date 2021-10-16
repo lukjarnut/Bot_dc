@@ -11,6 +11,7 @@ const get_date = require('./mods/date');
 const check_config = require('./mods/check_config');
 
 let pojedynek_avaible = true;
+let update_avaible = true;
 
 const client = new Discord.Client();
 
@@ -100,6 +101,35 @@ const pojedynek_job = schedule.scheduleJob('*/10 * * * * *', function () {
 			 pojedynek_avaible = true;
 })
 
+const member_update_job = schedule.scheduleJob('*/2 * * * * *', function () {
+			 update_avaible = true;
+})
+
+
+client.on('guildMemberUpdate', async (oldUser, newUser) => {
+	if(update_avaible){
+
+	  //if (oldUser.nickname !== newUser.nickname) console.log(`${oldUser.nickname}'s new username is ${newUser.nickname}!`)
+		//console.log("username: " + newUser.user.username + " #" + newUser.user.id + " nickname: " + newUser.nickname);
+			try {
+				if(newUser.user.id === '481926912906887168' && update_avaible){
+						newUser.setNickname("Leczo ekipy");
+						update_avaible=false;
+						}
+			//message.guild.members.cache.forEach(member => {
+		//	if(newUser.user.id === '619597863319633973' && update_avaible){
+		//			newUser.setNickname("Horwacja");
+			//	}
+			//message.guild.members.cache.forEach(member => {
+
+			}
+			catch (e){
+				console.log(e);
+			}
+		//console.log(newUser.user.id);
+	}
+})
+
 client.on('message', async message => {
 	const author = message.author.id;
 
@@ -118,16 +148,41 @@ client.on('message', async message => {
 
 	const args = message.content.slice(process.env.PREFIX.length).trim().split(/ +/);
 	const command = args.shift().toLowerCase();
-	
+
 	if(!message.content.startsWith(process.env.PREFIX)) return;
 
 	if (command === 'test') {
-
-		message.channel.send('Działam. Działam. Spokojnie...');
+		try {
+		message.guild.members.cache.forEach(member => {
+		if(member.id === '619597863319633973'){
+				member.setNickname("wiksson");
+				}
+			});
+		}
+		catch (e){
+			console.log(e);
+		}
+		//message.channel.send('Działam. Działam. Spokojnie...');
 	}
+	else if(command == 'aco' || message.author.id === '619597863319633973'){ //Wikson
+		if (await check_config("wikson", promisePool) == "true"){
+			if (getRandom(100) <= 44){
+				message.react('🇦')
+				.then(() => message.react('🇱'))
+				.then(() => message.react('🇪'))
+				.then(() => message.react('🟦'))
+				.then(() => message.react('🇨'))
+				.then(() => message.react('🇴'))
+				.then(() => message.react('❓'))
+				.catch(console.error);
+						console.log(`${message.author.tag} mowi, ale co`);
+			}
+		}
+	}
+
 	if (command === 'test_embed') {
 		let date_ob = new Date();
-		const embed_test = new Discord.MessageEmbed() 
+		const embed_test = new Discord.MessageEmbed()
 			.setColor('#0000ff')
 			.setTitle('Ziobro ty kurwo jebana')
 			.setDescription('Stanowski to też menda')
@@ -229,22 +284,6 @@ client.on('message', async message => {
 			console.log(err);
 		}
 	}
-    }
-
-    else if(command == 'aco' || message.author.id === '619597863319633973'){ //Wikson
-	if (await check_config("wikson", promisePool) == "true"){
-		if (getRandom(100) <= 14){
-			message.react('🇦')
-			.then(() => message.react('🇱'))
-			.then(() => message.react('🇪'))
-			.then(() => message.react('🟦'))
-			.then(() => message.react('🇨'))
-			.then(() => message.react('🇴'))
-			.then(() => message.react('❓'))
-			.catch(console.error);
-					console.log(`${message.author.tag} mowi, ale co`);
-				}
-			}
     }
 
 	else if((message.content.toLowerCase().includes("wyłącz") || message.content.toLowerCase().includes("wylacz")
