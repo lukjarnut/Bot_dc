@@ -2,7 +2,6 @@
 
 require('dotenv').config();
 
-const Discord = require('discord.js');
 const mysql = require('mysql2');
 const schedule = require('node-schedule');
 
@@ -13,7 +12,14 @@ const check_config = require('./mods/check_config');
 let pojedynek_avaible = true;
 let update_avaible = true;
 
-const client = new Discord.Client();
+const {Client, Intents} = require('discord.js');
+const client = new Client({
+	intents: [
+		Intents.FLAGS.GUILDS,
+		Intents.FLAGS.GUILD_MESSAGES,
+		Intents.FLAGS.GUILD_MEMBERS,
+		Intents.FLAGS.GUILD_VOICE_STATES,
+	] });
 
 client.once('ready', () => {
 	console.log('Bot ready to work!');
@@ -31,13 +37,15 @@ const pool = mysql.createPool({
 const promisePool = pool.promise();
 
 function still_ping_pong(newVoiceState){
-	if  ((newVoiceState.channelID === '848546786032615436') ||
-			(newVoiceState.channelID === '848546824498315274') ||
-			(newVoiceState.channelID === '849004787188891659') ||
-			(newVoiceState.channelID === '848546799186214962')){
-				return(true)}
-	else{
-		return (false)
+	if(newVoiceState.channel != null){
+		if  ((newVoiceState.channel.id === '848546786032615436') ||
+				(newVoiceState.channel.id === '848546824498315274') ||
+				(newVoiceState.channel.id === '849004787188891659') ||
+				(newVoiceState.channel.id === '848546799186214962')){
+					return(true)}
+		else{
+			return (false)
+		}
 	}
 }
 
@@ -47,47 +55,48 @@ function getRandom(max) {
 
 
 client.on("voiceStateUpdate", async (oldVoiceState, newVoiceState) => { // Listeing to the voiceStateUpdate event
-    let timeout = 1200;
+	if(newVoiceState.channel != null){
+		let timeout = 1200;
 		let timeout_afk = 5*60000;
-
 		//ping pong
 		const state = await check_config("ping_pong", promisePool);
 		if(state == 'true'){
 		if(newVoiceState.member.id === '364442363277475841' && still_ping_pong(newVoiceState)){
-			newVoiceState.member.voice.setChannel(oldVoiceState.channelID);
+			newVoiceState.setChannel(oldVoiceState.channel);
 		}
-	    if (newVoiceState.channelID === '848546786032615436') {
+	    if (newVoiceState.channel.id === '848546786032615436') {
 	        setTimeout(() => {
-		if(still_ping_pong(newVoiceState)){
-	            newVoiceState.member.voice.setChannel('848546824498315274')
+						if(still_ping_pong(newVoiceState)){
+	            newVoiceState.setChannel('848546824498315274')
 	            .catch(console.error);
 	        }}, timeout);
 	        console.log(`${newVoiceState.member.user.tag} Gra w pingponga xD`);
 	    }
-	    else if (newVoiceState.channelID === '848546824498315274') {
+	    else if (newVoiceState.channel.id === '848546824498315274') {
 	        setTimeout(() => {
-		if(still_ping_pong(newVoiceState)){
-	            newVoiceState.member.voice.setChannel('849004787188891659')
+						if(still_ping_pong(newVoiceState)){
+	            newVoiceState.setChannel('849004787188891659')
 	            .catch(console.error);
 	        }}, timeout);
 	    }
-	    else if (newVoiceState.channelID === '849004787188891659') {
+	    else if (newVoiceState.channel.id === '849004787188891659') {
 	        setTimeout(() => {
-		if(still_ping_pong(newVoiceState)){
-	            newVoiceState.member.voice.setChannel('848546799186214962')
+						if(still_ping_pong(newVoiceState)){
+	            newVoiceState.setChannel('848546799186214962')
 	            .catch(console.error);
 	        }}, timeout);
 	    }
-	    else if (newVoiceState.channelID === '848546799186214962') {
+	    else if (newVoiceState.channel.id === '848546799186214962') {
 	        setTimeout(() => {
-		if(still_ping_pong(newVoiceState)){
-	            newVoiceState.member.voice.setChannel('848546786032615436')
+						if(still_ping_pong(newVoiceState)){
+	            newVoiceState.setChannel('848546786032615436')
 	            .catch(console.error);
 	        }}, timeout);
 	    }
 		}
 		//bryg
-		else if (newVoiceState.channelID === '804802571172708423') {
+
+		else if (newVoiceState.channel.id === '804802571172708423') {
 	        setTimeout(() => {
 		if (newVoiceState.channelID === '804802571172708423'){
 	            newVoiceState.member.voice.setChannel('848546786032615436')
@@ -95,6 +104,7 @@ client.on("voiceStateUpdate", async (oldVoiceState, newVoiceState) => { // Liste
 						}
 	        }, timeout_afk);
 	    }
+		}
 });
 
 const pojedynek_job = schedule.scheduleJob('*/10 * * * * *', function () {
@@ -130,7 +140,7 @@ client.on('guildMemberUpdate', async (oldUser, newUser) => {
 	}
 })
 
-client.on('message', async message => {
+client.on('messageCreate', async message => {
 	const author = message.author.id;
 
 	const bye_gif = giphs.bye_gif;
@@ -152,7 +162,7 @@ client.on('message', async message => {
 	if(!message.content.startsWith(process.env.PREFIX)) return;
 
 	if (command === 'test') {
-		try {
+		/*try {
 		message.guild.members.cache.forEach(member => {
 		if(member.id === '619597863319633973'){
 				member.setNickname("wiksson");
@@ -161,8 +171,8 @@ client.on('message', async message => {
 		}
 		catch (e){
 			console.log(e);
-		}
-		//message.channel.send('Działam. Działam. Spokojnie...');
+		}*/
+		message.channel.send('Działam. Działam. Spokojnie...');
 	}
 	else if(command == 'aco' || message.author.id === '619597863319633973'){ //Wikson
 		if (await check_config("wikson", promisePool) == "true"){
@@ -179,7 +189,7 @@ client.on('message', async message => {
 			}
 		}
 	}
-
+/*
 	if (command === 'test_embed') {
 		let date_ob = new Date();
 		const embed_test = new Discord.MessageEmbed()
@@ -194,6 +204,7 @@ client.on('message', async message => {
 			.setFooter(get_date());
 		message.channel.send(embed_test);
 	}
+	*/
 	else if(command === 'drumek_out' && await check_config("drumek", promisePool) == "true"){
 		message.delete();
 		message.guild.members.cache.forEach(member => {
